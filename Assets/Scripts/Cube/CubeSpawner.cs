@@ -12,7 +12,7 @@ public class CubeSpawner : MonoBehaviour
 
     private int _minNumbersSmallCube = 2;
     private int _maxNumbersSmallCube = 6;
-    private float _reduceScaleCoef = 0.5f;
+    private float _reduceScaleCoef = 2f;
 
     private System.Random _random = new System.Random();
 
@@ -54,7 +54,7 @@ public class CubeSpawner : MonoBehaviour
 
     private Cube InstantiateSmallCubeFromBigCube(Cube bigCube)
     {
-        Vector3 newScale = bigCube.transform.localScale * _reduceScaleCoef;
+        Vector3 newScale = bigCube.transform.localScale / _reduceScaleCoef;
 
         Vector3 spawnPoint = new Vector3(bigCube.transform.position.x + Convert.ToSingle(_random.NextDouble() - _random.NextDouble()),
                                             bigCube.transform.position.y + Convert.ToSingle(_random.NextDouble() - _random.NextDouble()),
