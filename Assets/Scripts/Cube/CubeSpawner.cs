@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class CubeSpawner : MonoBehaviour
 {
     private const string CubeLayer = nameof(CubeLayer);
-    private const int PressLeftClick = 0;
+    private const int MouseClick = 0;
 
     [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Camera _camera;
@@ -27,7 +27,7 @@ public class CubeSpawner : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Input.GetMouseButtonDown(PressLeftClick))
+        if (Input.GetMouseButtonDown(MouseClick))
         {
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, _cubeLayerMask))
             {
