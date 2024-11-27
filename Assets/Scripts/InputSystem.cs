@@ -24,7 +24,7 @@ public class InputSystem : MonoBehaviour
         _cubeLayerMask = LayerMask.GetMask(CubeLayer);
     }
 
-    void Update()
+    private void Update()
     {
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
