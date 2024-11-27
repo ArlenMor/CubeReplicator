@@ -4,17 +4,16 @@ using System.Collections.Generic;
 
 public class CubeSpawner : MonoBehaviour
 {
-    private static string CubeLayer = nameof(CubeLayer);
-    private static int LeftClick = 0;
+    private const string CubeLayer = nameof(CubeLayer);
+    private const int PressLeftClick = 0;
 
-    [SerializeField] private GameObject _cubePrefab;
+    [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Camera _camera;
 
     private int _minNumbersOfSmallCube = 2;
     private int _maxNumbersOfSmallCube = 6;
     private float _reduceScaleCoef = 0.5f;
 
-    private Ray _ray;
     private LayerMask _cubeLayerMask;
     private System.Random _random = new System.Random();
 
@@ -25,51 +24,44 @@ public class CubeSpawner : MonoBehaviour
 
     private void Update()
     {
-        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(_ray, out hit, Mathf.Infinity, _cubeLayerMask))
+        if (Input.GetMouseButtonDown(PressLeftClick))
         {
-            if (Input.GetMouseButtonDown(LeftClick))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, _cubeLayerMask))
             {
-                Cube cube;
-
-                if (hit.collider.gameObject.TryGetComponent<Cube>(out cube))
+                if (hit.collider.gameObject.TryGetComponent<Cube>(out Cube cube))
                     SpawnSmallCubesFromBigCube(cube);
             }
         }
     }
 
-    private void SpawnSmallCubesFromBigCube(Cube cube)
+    private void SpawnSmallCubesFromBigCube(Cube bigCube)
     {
-        List<Collider> colliderOfCreatedCubes = new List<Collider>();
+        List<Rigidbody> rigidbodyOfCreatedCubes = new List<Rigidbody>();
         
-        int numberOfCubes = _random.Next(_minNumbersOfSmallCube, _maxNumbersOfSmallCube);
+        int numberOfCubes = _random.Next(_minNumbersOfSmallCube, _maxNumbersOfSmallCube + 1);
 
-        cube.gameObject.SetActive(false);
+        bigCube.gameObject.SetActive(false);
 
-        if (cube.MultiplyChance >= _random.NextDouble())
+        if (bigCube.MultiplyChance >= _random.NextDouble())
         {
             for (int i = 0; i < numberOfCubes; i++)
             {
-                GameObject newCubeObject = InstantiateSmallCubeFromBigCube(cube);
+                Cube smallCube = InstantiateSmallCubeFromBigCube(bigCube);
 
-                Collider collider;
-
-                if (newCubeObject.TryGetComponent<Collider>(out collider))
-                    colliderOfCreatedCubes.Add(collider);
+                if (smallCube.Rigidbody)
+                    rigidbodyOfCreatedCubes.Add(smallCube.Rigidbody);
             }
 
-            cube.Explode(colliderOfCreatedCubes);
-            Destroy(cube.gameObject);
+            bigCube.Explode(rigidbodyOfCreatedCubes);
         }
-        else
-        {
-            Destroy(cube.gameObject);
-        }
+
+        Destroy(bigCube.gameObject);
     }
 
-    private GameObject InstantiateSmallCubeFromBigCube(Cube bigCube)
+    private Cube InstantiateSmallCubeFromBigCube(Cube bigCube)
     {
         Vector3 newScale = bigCube.transform.localScale * _reduceScaleCoef;
 
@@ -77,14 +69,10 @@ public class CubeSpawner : MonoBehaviour
                                             bigCube.transform.position.y + Convert.ToSingle(_random.NextDouble() - _random.NextDouble()),
                                             bigCube.transform.position.z + Convert.ToSingle(_random.NextDouble() - _random.NextDouble()));
 
-        GameObject newCubeObject = Instantiate(_cubePrefab, spawnPoint, Quaternion.identity);
-        newCubeObject.transform.localScale = newScale;
+        Cube newCube = Instantiate(_cubePrefab, spawnPoint, Quaternion.identity);
+        newCube.transform.localScale = newScale;
+        newCube.Init(bigCube.MultiplyChance);
 
-        Cube newCube;
-
-        if (newCubeObject.TryGetComponent<Cube>(out newCube))
-            newCube.ReduceMultiplyChance(bigCube.MultiplyChance);
-
-        return newCubeObject;
+        return newCube;
     }
 }

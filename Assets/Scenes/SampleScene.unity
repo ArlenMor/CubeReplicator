@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ddc1c8a85d4fd4cbf5211eba3e75ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cubePrefab: {fileID: 4328948102696089777, guid: b4b59d1691505604a8b4337dfd73af41, type: 3}
+  _cubePrefab: {fileID: 3980140726116654681, guid: b4b59d1691505604a8b4337dfd73af41, type: 3}
   _camera: {fileID: 963194227}
 --- !u!1001 &1384479270
 PrefabInstance:
