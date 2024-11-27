@@ -2,51 +2,42 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(InputSystem))]
 public class CubeSpawner : MonoBehaviour
 {
-    private const string CubeLayer = nameof(CubeLayer);
-    private const int MouseClick = 0;
+    public static CubeSpawner Instance = null;
 
     [SerializeField] private Cube _cubePrefab;
-    [SerializeField] private Camera _camera;
+    [SerializeField] private InputSystem _inputSystem;
 
-    private int _minNumbersOfSmallCube = 2;
-    private int _maxNumbersOfSmallCube = 6;
+    private int _minNumbersSmallCube = 2;
+    private int _maxNumbersSmallCube = 6;
     private float _reduceScaleCoef = 0.5f;
 
-    private LayerMask _cubeLayerMask;
     private System.Random _random = new System.Random();
 
-    private void Awake()
-    {
-        _cubeLayerMask = LayerMask.GetMask(CubeLayer);
-    }
+    public event Action<Transform, List<Rigidbody>> OnExplode;
 
-    private void Update()
+    private void Start()
     {
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        if (Instance = null)
+            Instance = this;
+        else if (Instance == this)
+            Destroy(gameObject);
 
-        if (Input.GetMouseButtonDown(MouseClick))
-        {
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, _cubeLayerMask))
-            {
-                if (hit.collider.gameObject.TryGetComponent<Cube>(out Cube cube))
-                    SpawnSmallCubesFromBigCube(cube);
-            }
-        }
+        _inputSystem.OnCubePressed += SpawnSmallCubesFromBigCube;
     }
 
     private void SpawnSmallCubesFromBigCube(Cube bigCube)
     {
         List<Rigidbody> rigidbodyOfCreatedCubes = new List<Rigidbody>();
-        
-        int numberOfCubes = _random.Next(_minNumbersOfSmallCube, _maxNumbersOfSmallCube + 1);
 
         bigCube.gameObject.SetActive(false);
 
         if (bigCube.MultiplyChance >= _random.NextDouble())
         {
+            int numberOfCubes = UnityEngine.Random.Range(_minNumbersSmallCube, _maxNumbersSmallCube);
+
             for (int i = 0; i < numberOfCubes; i++)
             {
                 Cube smallCube = InstantiateSmallCubeFromBigCube(bigCube);
@@ -55,7 +46,7 @@ public class CubeSpawner : MonoBehaviour
                     rigidbodyOfCreatedCubes.Add(smallCube.Rigidbody);
             }
 
-            bigCube.Explode(rigidbodyOfCreatedCubes);
+            OnExplode?.Invoke(bigCube.transform, rigidbodyOfCreatedCubes);
         }
 
         Destroy(bigCube.gameObject);
