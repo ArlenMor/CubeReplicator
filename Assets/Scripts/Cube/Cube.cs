@@ -8,21 +8,20 @@ public class Cube : MonoBehaviour
     [SerializeField, Range(100, 500)] float _explosionForce;
 
     MeshRenderer _renderer;
-    public float DestroyChance { get; private set; }
+    public float MultiplyChance { get; private set; }
 
-    private static float _maxRgbValue = 1;
-    private float _reduceSpawnChanceCoef = 2f;
+    private float _reduceMultiplyChanceCoef = 2f;
 
     private void Awake()
     {
-        DestroyChance = 1f;
+        MultiplyChance = 1f;
 
         System.Random random = new System.Random();
 
         _renderer = GetComponent<MeshRenderer>();
-        _renderer.material.color = new Color(Convert.ToSingle(random.NextDouble() % _maxRgbValue),
-                                                Convert.ToSingle(random.NextDouble() % _maxRgbValue),
-                                                Convert.ToSingle(random.NextDouble() % _maxRgbValue));
+        _renderer.material.color = new Color(Convert.ToSingle(random.NextDouble()),
+                                                Convert.ToSingle(random.NextDouble()),
+                                                Convert.ToSingle(random.NextDouble()));
     }
 
     public void Explode(List<Collider> smallCubes)
@@ -36,8 +35,8 @@ public class Cube : MonoBehaviour
         }
     }
 
-    public void ReduceDestroyChance(float oldChance)
+    public void ReduceMultiplyChance(float multiplyChanceBigCube)
     {
-        DestroyChance = oldChance / _reduceSpawnChanceCoef;
+        MultiplyChance = multiplyChanceBigCube / _reduceMultiplyChanceCoef;
     }
 }
