@@ -69,10 +69,10 @@ public class CubeSpawner : MonoBehaviour
                                             bigCube.transform.position.y + Convert.ToSingle(_random.NextDouble() - _random.NextDouble()),
                                             bigCube.transform.position.z + Convert.ToSingle(_random.NextDouble() - _random.NextDouble()));
 
-        Cube newCube = Instantiate(_cubePrefab, spawnPoint, Quaternion.identity);
-        newCube.transform.localScale = newScale;
-        newCube.Init(bigCube.MultiplyChance);
+        Cube newSmallCube = Instantiate(_cubePrefab, spawnPoint, Quaternion.identity);
+        newSmallCube.transform.localScale = newScale;
+        newSmallCube.Init(bigCube.MultiplyChance);
 
-        return newCube;
+        return newSmallCube;
     }
 }
