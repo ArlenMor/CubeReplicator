@@ -1,9 +1,13 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(MeshRenderer))]
 public class Cube : MonoBehaviour
 {
     private float _reduceMultiplyChanceCoef = 2f;
+
+    private ColorChanger _colorChanger = new ColorChanger();
+    private MeshRenderer _meshRenderer;
 
     public Rigidbody Rigidbody { get; private set; }
     public float MultiplyChance { get; private set; }
@@ -13,8 +17,9 @@ public class Cube : MonoBehaviour
         MultiplyChance = 1f;
 
         Rigidbody = GetComponent<Rigidbody>();
+        _meshRenderer = GetComponent<MeshRenderer>();
 
-        ColorChanger.GetRandomColor(this.gameObject);
+        _colorChanger.SetRandomColor(_meshRenderer);
     }
 
     public void Init(float multiplyChanceBigCube)

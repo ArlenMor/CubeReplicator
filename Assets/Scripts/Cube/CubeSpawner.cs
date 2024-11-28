@@ -2,13 +2,10 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(InputSystem))]
+[RequireComponent(typeof(Raycaster))]
 public class CubeSpawner : MonoBehaviour
 {
-    public static CubeSpawner Instance = null;
-
     [SerializeField] private Cube _cubePrefab;
-    [SerializeField] private InputSystem _inputSystem;
 
     private int _minNumbersSmallCube = 2;
     private int _maxNumbersSmallCube = 6;
@@ -18,17 +15,7 @@ public class CubeSpawner : MonoBehaviour
 
     public event Action<Transform, List<Rigidbody>> OnExplode;
 
-    private void Start()
-    {
-        if (Instance = null)
-            Instance = this;
-        else if (Instance == this)
-            Destroy(gameObject);
-
-        _inputSystem.OnCubePressed += SpawnSmallCubesFromBigCube;
-    }
-
-    private void SpawnSmallCubesFromBigCube(Cube bigCube)
+    public void SpawnSmallCubes(Cube bigCube)
     {
         List<Rigidbody> rigidbodyOfCreatedCubes = new List<Rigidbody>();
 
@@ -40,7 +27,7 @@ public class CubeSpawner : MonoBehaviour
 
             for (int i = 0; i < numberOfCubes; i++)
             {
-                Cube smallCube = InstantiateSmallCubeFromBigCube(bigCube);
+                Cube smallCube = InstantiateSmallCube(bigCube);
 
                 if (smallCube.Rigidbody)
                     rigidbodyOfCreatedCubes.Add(smallCube.Rigidbody);
@@ -52,7 +39,7 @@ public class CubeSpawner : MonoBehaviour
         Destroy(bigCube.gameObject);
     }
 
-    private Cube InstantiateSmallCubeFromBigCube(Cube bigCube)
+    private Cube InstantiateSmallCube(Cube bigCube)
     {
         Vector3 newScale = bigCube.transform.localScale / _reduceScaleCoef;
 

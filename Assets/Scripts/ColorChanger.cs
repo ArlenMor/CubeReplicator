@@ -1,12 +1,9 @@
 using UnityEngine;
 
-public static class ColorChanger
+public class ColorChanger
 {
-    public static void GetRandomColor(GameObject gameObject)
+    public void SetRandomColor(MeshRenderer renderer)
     {
-        if (gameObject.TryGetComponent(out MeshRenderer renderer))
-            renderer.material.color = Random.ColorHSV();
-        else
-            Debug.LogWarning($"На объекте {gameObject.name} отсутствует {typeof(MeshRenderer)}.");
+        renderer.material.color = Random.ColorHSV();
     }
 }
