@@ -23,7 +23,7 @@ public class CubeSpawner : MonoBehaviour
 
         if (bigCube.MultiplyChance >= _random.NextDouble())
         {
-            int numberOfCubes = UnityEngine.Random.Range(_minNumbersSmallCube, _maxNumbersSmallCube);
+            int numberOfCubes = UnityEngine.Random.Range(_minNumbersSmallCube, _maxNumbersSmallCube + 1);
 
             for (int i = 0; i < numberOfCubes; i++)
             {

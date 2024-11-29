@@ -19,7 +19,7 @@ public class Cube : MonoBehaviour
         Rigidbody = GetComponent<Rigidbody>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
-        _colorChanger.SetRandomColor(_meshRenderer);
+        _meshRenderer.material.color = _colorChanger.GetRandomColor();
     }
 
     public void Init(float multiplyChanceBigCube)

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ColorChanger
 {
-    public void SetRandomColor(MeshRenderer renderer)
+    public Color GetRandomColor()
     {
-        renderer.material.color = Random.ColorHSV();
+        return Random.ColorHSV();
     }
 }
