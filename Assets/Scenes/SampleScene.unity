@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 606d096f651faac489b493b2ea3d14c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 10
+  _radius: 30
   _explosionForce: 500
 --- !u!4 &539239859
 Transform:
