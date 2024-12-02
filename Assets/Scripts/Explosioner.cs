@@ -1,24 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CubeSpawner))]
-public class Explosioner : MonoBehaviour
+public class Explosioner
 {
-    [SerializeField] private CubeSpawner _spawner;
-    [SerializeField, Range(1, 10)] private float _radius;
-    [SerializeField, Range(100, 500)] private float _explosionForce;
+    private float _radius;
+    private float _explosionForce;
 
-    private void Start()
+    public Explosioner(float explosionRadius, float explosionForce)
     {
-        _spawner.OnExplode += Explode;
+        _radius = explosionRadius;
+        _explosionForce = explosionForce;
     }
 
-    private void OnDestroy()
-    {
-        _spawner.OnExplode -= Explode;
-    }
-
-    private void Explode(Transform centerExplosion, List<Rigidbody> explosiveObjects)
+    public void Explode(Transform centerExplosion, List<Rigidbody> explosiveObjects)
     {
         for (int i = 0; i < explosiveObjects.Count; i++)
             explosiveObjects[i].AddExplosionForce(_explosionForce, centerExplosion.position, _radius);
