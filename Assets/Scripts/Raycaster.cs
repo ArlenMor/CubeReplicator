@@ -16,7 +16,10 @@ public class Raycaster : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _cubeLayerMask))
             {
                 if (hit.collider.gameObject.TryGetComponent(out Cube cube))
+                {
+                    cube.Replicate();
                     cube.Explode();
+                }
             }
         }
     }

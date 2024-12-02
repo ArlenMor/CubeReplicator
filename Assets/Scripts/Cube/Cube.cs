@@ -3,45 +3,53 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(CubeReplicator))]
 public class Cube : MonoBehaviour
 {
     private float _reduceMultiplyChanceCoef = 2f;
 
-    private CubeReplicator _spawner;
-    private Explosioner _explosioner;
-
     private ColorChanger _colorChanger = new ColorChanger();
     private MeshRenderer _meshRenderer;
+    private List<Rigidbody> _rigidbodyReplicatedCubes = new List<Rigidbody>();
 
-    [SerializeField, Range(1, 10)] private float _explosionRadius;
-    [SerializeField, Range(100, 500)] private float _explosionForce;
-
+    public CubeReplicator Replicator { get; private set; }
+    public Explosioner Explosioner { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
     public float MultiplyChance { get; private set; }
 
     private void Awake()
     {
-        _spawner = GetComponent<CubeReplicator>();
-        Rigidbody = GetComponent<Rigidbody>();
-        _meshRenderer = GetComponent<MeshRenderer>();
-
-        _explosioner = new Explosioner(_explosionRadius, _explosionForce);
-
         MultiplyChance = 1f;
 
+        Rigidbody = GetComponent<Rigidbody>();
+        _meshRenderer = GetComponent<MeshRenderer>();
         _meshRenderer.material.color = _colorChanger.GetRandomColor();
     }
 
-    public void Init(float multiplyChanceBigCube)
+    private void Start()
+    {
+        if (Replicator == null)
+            Replicator = FindFirstObjectByType<CubeReplicator>();
+
+        if (Explosioner == null)
+            Explosioner = FindFirstObjectByType<Explosioner>();
+    }
+
+    public void Init(float multiplyChanceBigCube, CubeReplicator replicator, Explosioner explosioner)
     {
         MultiplyChance = multiplyChanceBigCube / _reduceMultiplyChanceCoef;
+
+        Explosioner = explosioner;
+        Replicator = replicator;
+    }
+
+    public void Replicate()
+    {
+        _rigidbodyReplicatedCubes = Replicator.Replicate(this);
     }
 
     public void Explode()
     {
-        _spawner.Replicate(this, out List<Rigidbody> rigidbodyOfCreatedCubes);
-
-        _explosioner.Explode(transform, rigidbodyOfCreatedCubes);
+        if(_rigidbodyReplicatedCubes.Count != 0)
+            Explosioner.Explode(transform, _rigidbodyReplicatedCubes);
     }
 }

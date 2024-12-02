@@ -1,16 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Explosioner
+public class Explosioner : MonoBehaviour
 {
-    private float _radius;
-    private float _explosionForce;
-
-    public Explosioner(float explosionRadius, float explosionForce)
-    {
-        _radius = explosionRadius;
-        _explosionForce = explosionForce;
-    }
+    [SerializeField, Range(1, 10)] private float _radius;
+    [SerializeField, Range(100,500)] private float _explosionForce;
 
     public void Explode(Transform centerExplosion, List<Rigidbody> explosiveObjects)
     {

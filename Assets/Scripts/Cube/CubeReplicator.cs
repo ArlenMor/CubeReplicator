@@ -12,9 +12,9 @@ public class CubeReplicator : MonoBehaviour
 
     private System.Random _random = new System.Random();
 
-    public void Replicate(Cube cube, out List<Rigidbody> rigidbodyReplicatedCubes)
+    public List<Rigidbody> Replicate(Cube cube)
     {
-        rigidbodyReplicatedCubes = new List<Rigidbody>();
+        List<Rigidbody> rigidbodyReplicatedCubes = new List<Rigidbody>();
 
         if (cube.MultiplyChance >= _random.NextDouble())
         {
@@ -30,6 +30,8 @@ public class CubeReplicator : MonoBehaviour
         }
 
         Destroy(cube.gameObject);
+
+        return rigidbodyReplicatedCubes;
     }
 
     private Cube InstantiateReplicatedCube(Cube cube)
@@ -42,7 +44,7 @@ public class CubeReplicator : MonoBehaviour
 
         Cube replicatedCube = Instantiate(_cubePrefab, spawnPoint, Quaternion.identity);
         replicatedCube.transform.localScale = newScale;
-        replicatedCube.Init(cube.MultiplyChance);
+        replicatedCube.Init(cube.MultiplyChance, cube.Replicator, cube.Explosioner);
 
         return replicatedCube;
     }
